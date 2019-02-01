@@ -21,18 +21,18 @@ spec:
                 openshiftBuild(namespace: 'development-saberkan', buildConfig: 'springboot', showBuildLogs: 'true')
             }
             stage ('promoteToStaging') {
-                def userInput = input(
+                def version = input(
                     id: 'userInput', message: 'please provide version to promote to staging',
-                    parameters: [
-                            string(defaultValue: 'None',
-                                    description: 'verison',
-                                    name: 'version')
+                    parameters: [[$class: 'StringParameterDefinition', defaultValue: 'None', 
+                        description:'version', name:'version']
                     ])
-                def version = userInput.version?:''
+                echo("version: ${version}")
                 
                 openshiftTag(namespace: 'openshift', sourceStream: 'springboot',  sourceTag: 'latest', destinationStream: 'springboot', destinationTag: version)
-                openshiftDeploy(namespace: 'staging-saberkan', deploymentConfig: 'springboot', )
+                sh 'oc set image dc/springboot *=172.30.1.1:5000/openshift/springboot:${version} -n staging-saberkan'
+                openshiftDeploy(namespace: 'staging-saberkan', deploymentConfig: 'springboot')
+                openshiftScale(namespace: 'staging-saberkan', deploymentConfig: 'springboot',replicaCount: '2')
             }
-            openshiftScale(namespace: 'staging-saberkan', deploymentConfig: 'springboot',replicaCount: '2')
+            
         }
     type: JenkinsPipeline
