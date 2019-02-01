@@ -14,15 +14,22 @@ $ oc cluster up --skip-registry-check=true
 # Wait until the cluster is up and connect to the cluster 
 $ oc login -u system:admin
 
+## Step 2 : Create developement, staging & production environments
+<pre>
+$ oc new-project development-saberkan
+$ oc new-project staging-saberkan
+</pre>
+
 # Add role to developer and jenkins user
 $ oc adm policy add-role-to-user admin developer -n development-saberkan
 $ oc adm policy add-role-to-user admin developer -n staging-saberkan
 $ oc adm policy add-role-to-user admin developer -n pipeline-saberkan
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n development-saberkan
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n staging-saberkan
+$ oc adm policy add-role-to-user admin system:serviceaccount:development-saberkan:builder -n openshift
 </pre>
 
-## Step 2 : Init a jenkins in pipeline environment
+## Step 3 : Init a jenkins in pipeline environment
 When running a BuildConfiguration with Jenkins strategy in OKD cluster, it popup a running jenkins master in the same namespace. This jenkins is alredy configured with kubernetes plugin that uses slaves on openshift to run the jobs.
 
 Let's start by running creating a namespace, and popup a master jenkins on it using a BuildConfiguration
@@ -35,12 +42,6 @@ $ oc apply -f pipeline_bc_init.yaml
 Remarque : saberkan is my personal username, you can edit with your own
 
 Now wait few minutes until jenkins is fully running. if the deployment can't pull the image from the local registry, donc forget to enable the access to the regitry by setting --insecure-registries in docker configuration.
-
-## Step 3 : Create developement, staging & production environments
-<pre>
-$ oc new-project development-saberkan
-$ oc new-project staging-saberkan
-</pre>
 
 ## Step 4 : Import S2I image to build springboot project
 <pre>
