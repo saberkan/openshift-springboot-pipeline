@@ -21,6 +21,7 @@ $ oc new-project staging-saberkan
 </pre>
 
 # Add role to developer and jenkins user
+<pre>
 $ oc adm policy add-role-to-user admin developer -n development-saberkan
 $ oc adm policy add-role-to-user admin developer -n staging-saberkan
 $ oc adm policy add-role-to-user admin developer -n pipeline-saberkan
