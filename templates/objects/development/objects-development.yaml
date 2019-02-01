@@ -156,6 +156,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
+        namespace: openshift
         name: springboot:latest
     postCommit: {}
     resources: {}

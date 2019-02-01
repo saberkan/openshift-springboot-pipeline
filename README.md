@@ -15,10 +15,11 @@ $ oc cluster up --skip-registry-check=true
 $ oc login -u system:admin
 </pre>
 
-## Step 2 : Create developement, staging & production environments
+## Step 2 : Create pipeline, developement & staging
 <pre>
 $ oc new-project development-saberkan
 $ oc new-project staging-saberkan
+$ oc new-project pipeline-saberkan
 </pre>
 
 # Add role to developer and jenkins user
@@ -26,6 +27,7 @@ $ oc new-project staging-saberkan
 $ oc adm policy add-role-to-user admin developer -n development-saberkan
 $ oc adm policy add-role-to-user admin developer -n staging-saberkan
 $ oc adm policy add-role-to-user admin developer -n pipeline-saberkan
+$ oc adm policy add-role-to-user admin developer -n openshift
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n development-saberkan
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n staging-saberkan
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n openshift
@@ -38,8 +40,7 @@ When running a BuildConfiguration with Jenkins strategy in OKD cluster, it popup
 Let's start by running creating a namespace, and popup a master jenkins on it using a BuildConfiguration
 <pre>
 $ cd resources/
-$ oc new-project pipeline-saberkan
-$ oc apply -f pipeline_bc_init.yaml
+$ oc apply -f pipeline_bc_init.yaml -n pipeline-saberkan
 </pre>
 
 Remarque : saberkan is my personal username, you can edit with your own
