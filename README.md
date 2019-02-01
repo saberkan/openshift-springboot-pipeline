@@ -39,7 +39,7 @@ When running a BuildConfiguration with Jenkins strategy in OKD cluster, it popup
 Let's start by running creating a namespace, and popup a master jenkins on it using a BuildConfiguration
 <pre>
 $ cd resources/
-$ oc apply -f pipeline_bc_init.yaml
+$ oc apply -f pipeline_bc_init.yaml -n pipeline-saberkan
 </pre>
 
 Remarque : saberkan is my personal username, you can edit with your own
