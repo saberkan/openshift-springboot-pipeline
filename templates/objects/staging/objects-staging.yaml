@@ -132,16 +132,6 @@ objects:
         securityContext: {}
         terminationGracePeriodSeconds: 30
     test: false
-    triggers:
-    - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - springboot
-        from:
-          kind: ImageStreamTag
-          name: springboot:latest
-      type: ImageChange
 - apiVersion: v1
   kind: ImageStream
   metadata:
