@@ -1,0 +1,38 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "springboot-saberkan-pipeline"
+spec:
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: >-
+        def gitUrl =
+        'https://github.com/saberkan/openshift-springboot-pipeline.git'
+
+
+        node('maven') {
+            stage ('Clone resources') {
+                git url: gitUrl, branch: "develop"
+            }
+            stage ('Test application') {
+                sh "cd springboot-project/springboot && mvn clean test"
+            }
+            stage ('buildInDevelopment') {
+                openshiftBuild(namespace: 'development-saberkan', buildConfig: 'springboot', showBuildLogs: 'true')
+            }
+            stage ('promoteToStaging') {
+                def version = input(
+                    id: 'userInput', message: 'please provide version to promote to staging',
+                    parameters: [[$class: 'StringParameterDefinition', defaultValue: 'None', 
+                        description:'version', name:'version']
+                    ])
+                echo("version: ${version}")
+                
+                openshiftTag(namespace: 'openshift', sourceStream: 'springboot',  sourceTag: 'latest', destinationStream: 'springboot', destinationTag: version)
+                sh 'oc set image dc/springboot *=172.30.1.1:5000/openshift/springboot:${version} -n staging-saberkan'
+                openshiftDeploy(namespace: 'staging-saberkan', deploymentConfig: 'springboot')
+                openshiftScale(namespace: 'staging-saberkan', deploymentConfig: 'springboot',replicaCount: '2')
+            }
+            
+        }
+    type: JenkinsPipeline
