@@ -13,6 +13,7 @@ This project shows how to deploy a springboot application into OKD from scratch,
 $ oc cluster up --skip-registry-check=true
 # Wait until the cluster is up and connect to the cluster 
 $ oc login -u system:admin
+</pre>
 
 ## Step 2 : Create developement, staging & production environments
 <pre>
