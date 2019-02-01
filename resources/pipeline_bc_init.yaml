@@ -29,7 +29,7 @@ spec:
                 echo("version: ${version}")
                 
                 openshiftTag(namespace: 'openshift', sourceStream: 'springboot',  sourceTag: 'latest', destinationStream: 'springboot', destinationTag: version)
-                sh 'oc set image dc/springboot *=172.30.1.1:5000/openshift/springboot:${version} -n staging-saberkan'
+                sh "oc set image dc/springboot *=172.30.1.1:5000/openshift/springboot:${version} -n staging-saberkan"
                 openshiftDeploy(namespace: 'staging-saberkan', deploymentConfig: 'springboot')
                 openshiftScale(namespace: 'staging-saberkan', deploymentConfig: 'springboot',replicaCount: '2')
             }
