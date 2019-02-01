@@ -55,8 +55,8 @@ $ oc import-image s2i-maven-java:latest --from=appuio/s2i-maven-java --confirm -
 $ cd ../templates
 $ oc process -f objects/development/objects-development.yaml | oc create -f - -n development-saberkan
 $ oc process -f objects/staging/objects-staging.yaml | oc create -f - -n staging-saberkan
-$ oc create cm openshift-cm --from-file=configMaps/development/ -n development-saberkan
-$ oc create cm openshift-cm --from-file=configMaps/staging/ -n staging-saberkan
+$ oc create cm springboot-cm --from-file=configMaps/development/ -n development-saberkan
+$ oc create cm springboot-cm --from-file=configMaps/staging/ -n staging-saberkan
 $ oc create is springboot -n openshift
 </pre>
 
