@@ -1,29 +1,38 @@
-apiVersion: v1
-kind: BuildConfig
+kind: "BuildConfig"
+apiVersion: "v1"
 metadata:
-  name: myfirstpipeline
-  labels:
-    name: myfirstpipeline
-  annotations:
-    pipeline.alpha.openshift.io/uses: '[{"name": "myphp", "namespace": "", "kind": "DeploymentConfig"}]'
+  name: "springboot-saberkan-pipeline"
 spec:
-  triggers:
-    -
-      type: GitHub
-      github:
-        secret: secret101
-    -
-      type: Generic
-      generic:
-        secret: secret101
-  runPolicy: Serial
-  source:
-    type: None
   strategy:
-    type: JenkinsPipeline
     jenkinsPipelineStrategy:
-      jenkinsfile: "node() {\nstage 'build'\nopenshiftBuild(buildConfig: 'myphp', showBuildLogs: 'true')\nstage 'deploy'\nopenshiftDeploy(deploymentConfig: 'myphp')\nopenshiftScale(deploymentConfig: 'myphp',replicaCount: '2')\n}"
-  output:
-  resources:
-  postCommit:
+      jenkinsfile: >-
+        def gitUrl =
+        'https://github.com/saberkan/openshift-springboot-pipeline.git'
 
+
+        node('maven') {
+            stage ('Clone resources') {
+                git url: gitUrl, branch: "develop"
+            }
+            stage ('Test application') {
+                sh "cd springboot-project/springboot && mvn clean test"
+            }
+            stage ('buildInDevelopment') {
+                openshiftBuild(namespace: 'development-saberkan', buildConfig: 'springboot', showBuildLogs: 'true')
+            }
+            stage ('promoteToStaging') {
+                def userInput = input(
+                    id: 'userInput', message: 'please provide version to promote to staging',
+                    parameters: [
+                            string(defaultValue: 'None',
+                                    description: 'verison',
+                                    name: 'version')
+                    ])
+                def version = userInput.version?:''
+                
+                openshiftTag(namespace: 'openshift', sourceStream: 'springboot',  sourceTag: 'latest', destinationStream: 'springboot', destinationTag: version)
+                openshiftDeploy(namespace: 'staging-saberkan', deploymentConfig: 'springboot', )
+            }
+            openshiftScale(namespace: 'staging-saberkan', deploymentConfig: 'springboot',replicaCount: '2')
+        }
+    type: JenkinsPipeline

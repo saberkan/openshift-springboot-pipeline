@@ -29,6 +29,19 @@ Remarque : saberkan is my personal username, you can edit with your own
 
 Now wait few minutes until jenkins is fully running. if the deployment can't pull the image from the local registry, donc forget to enable the access to the regitry by setting --insecure-registries in docker configuration.
 
+## Step 3 : Create namespaces
+<pre>
+$ oc new-project saberkan-development
+$ oc new-project saberkan-staging
+</pre>
+
+## Step 4 : Import S2I image to build springboot project
+<pre>
+$ docker pull appuio/s2i-maven-java 
+$ oc import-image s2i-maven-java:latest --from=appuio/s2i-maven-java --confirm
+</pre>
+
+
 TODO :
 ## Step 3 : Edit the pipeline
 ## Step 4 : Create developement, staging & production environments

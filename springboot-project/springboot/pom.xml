@@ -44,7 +44,9 @@
 		</dependency>
 	</dependencies>
 
+	<packaging>jar</packaging>
 	<build>
+		<finalName>ROOT</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -53,6 +55,7 @@
 		</plugins>	
 	</build>
 	
+		
 	
 
 </project>
