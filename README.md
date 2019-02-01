@@ -55,6 +55,7 @@ $ oc process -f objects/development/objects-development.yaml | oc create -f - -n
 $ oc process -f objects/staging/objects-staging.yaml | oc create -f - -n staging-saberkan
 $ oc create cm openshift-cm --from-file=configMaps/development/ -n development-saberkan
 $ oc create cm openshift-cm --from-file=configMaps/staging/ -n staging-saberkan
+$ oc create is springboot -n openshift
 </pre>
 
 ## Step 6 : Launch the pipeline
