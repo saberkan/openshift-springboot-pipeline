@@ -14,10 +14,12 @@ $ oc cluster up --skip-registry-check=true
 # Wait until the cluster is up and connect to the cluster 
 $ oc login -u system:admin
 
-# Add role to developer
+# Add role to developer and jenkins user
 $ oc adm policy add-role-to-user admin developer -n development-saberkan
 $ oc adm policy add-role-to-user admin developer -n staging-saberkan
 $ oc adm policy add-role-to-user admin developer -n pipeline-saberkan
+$ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n development-saberkan
+$ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n staging-saberkan
 </pre>
 
 ## Step 2 : Init a jenkins in pipeline environment
