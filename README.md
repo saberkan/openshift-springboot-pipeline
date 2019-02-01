@@ -27,6 +27,7 @@ $ oc new-project pipeline-saberkan
 $ oc adm policy add-role-to-user admin developer -n development-saberkan
 $ oc adm policy add-role-to-user admin developer -n staging-saberkan
 $ oc adm policy add-role-to-user admin developer -n pipeline-saberkan
+$ oc adm policy add-role-to-user admin developer -n openshift
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n development-saberkan
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n staging-saberkan
 $ oc adm policy add-role-to-user admin system:serviceaccount:pipeline-saberkan:jenkins -n openshift
